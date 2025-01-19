@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E9CDBC74-CE4A-41EE-AE18-C2E53257BD8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7E7035D1-A52A-4A00-B3E0-B969E8060686}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WebApi", "src\Postech.Fiap.Orders.WebApi\Postech.Fiap.Orders.WebApi.csproj", "{44EB9017-D871-44CF-8A86-04A80E200AA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C820DFC-4A29-4255-A6D1-5EC1586D15D1}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WepApi.Test", "test\Postech.Fiap.Orders.WepApi.Test\Postech.Fiap.Orders.WepApi.Test.csproj", "{A2A52D6B-FE4F-458B-87B7-58C4388AA656}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{44EB9017-D871-44CF-8A86-04A80E200AA9} = {E9CDBC74-CE4A-41EE-AE18-C2E53257BD8F}
+		{A2A52D6B-FE4F-458B-87B7-58C4388AA656} = {7E7035D1-A52A-4A00-B3E0-B969E8060686}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44EB9017-D871-44CF-8A86-04A80E200AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44EB9017-D871-44CF-8A86-04A80E200AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44EB9017-D871-44CF-8A86-04A80E200AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44EB9017-D871-44CF-8A86-04A80E200AA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A52D6B-FE4F-458B-87B7-58C4388AA656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A52D6B-FE4F-458B-87B7-58C4388AA656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A52D6B-FE4F-458B-87B7-58C4388AA656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A52D6B-FE4F-458B-87B7-58C4388AA656}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
