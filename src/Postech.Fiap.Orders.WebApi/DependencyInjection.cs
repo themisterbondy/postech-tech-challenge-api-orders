@@ -1,9 +1,13 @@
 using System.Reflection;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Postech.Fiap.Orders.WebApi.Common.Behavior;
+using Postech.Fiap.Orders.WebApi.Features.Orders.Repositories;
+using Postech.Fiap.Orders.WebApi.Features.Orders.Services;
+using Postech.Fiap.Orders.WebApi.Persistence;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -33,8 +37,11 @@ public static class DependencyInjection
         services.AddProblemDetails();
         services.AddCarter();
 
-        //Example dependency injection
-        //services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("SQLConnection")));
+
+        services.AddScoped<IOrderQueueRepository, OrderQueueRepository>();
+        services.AddScoped<IOrderQueueService, OrderQueueService>();
 
         return services;
     }

@@ -1,3 +1,4 @@
+using Postech.Fiap.Orders.WebApi.Common.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Services.AddSerilogConfiguration(builder, configuration);
 
 
 var app = builder.Build();
+app.ApplyMigrations();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.MapOpenApi();
@@ -18,5 +20,8 @@ app.UseMiddleware<RequestContextLoggingMiddleware>();
 app.MapCarter();
 app.Run();
 
-[ExcludeFromCodeCoverage]
-public partial class Program;
+namespace Postech.Fiap.Orders.WebApi
+{
+    [ExcludeFromCodeCoverage]
+    public partial class Program;
+}
