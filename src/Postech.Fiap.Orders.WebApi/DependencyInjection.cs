@@ -1,13 +1,20 @@
 using System.Reflection;
+using Azure.Storage.Queues;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Postech.Fiap.CartsPayments.WebApi.Infrastructure.Queue;
 using Postech.Fiap.Orders.WebApi.Common.Behavior;
+using Postech.Fiap.Orders.WebApi.Common.Messaging;
+using Postech.Fiap.Orders.WebApi.Features.Orders.Jobs;
+using Postech.Fiap.Orders.WebApi.Features.Orders.Messaging.Queues;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Repositories;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Services;
 using Postech.Fiap.Orders.WebApi.Persistence;
+using Quartz;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -43,7 +50,39 @@ public static class DependencyInjection
         services.AddScoped<IOrderQueueRepository, OrderQueueRepository>();
         services.AddScoped<IOrderQueueService, OrderQueueService>();
 
+        var storageConnectionString = configuration.GetValue<string>("AzureStorageSettings:ConnectionString");
+        services.Configure<AzureQueueSettings>(configuration.GetSection("AzureQueueSettings"));
+        services.AddScoped(cfg => cfg.GetService<IOptions<AzureQueueSettings>>().Value);
+        services.AddSingleton(x => new QueueServiceClient(storageConnectionString));
+        services.AddSingleton<IQueue, AzureQueueService>();
+        services.AddSingleton<CreateOrderCommandSubmittedQueueClient>();
+
+        services.AddQuartzConfiguration(configuration);
+
         return services;
+    }
+
+    private static void AddQuartzConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
+        services.AddQuartz(configure =>
+        {
+            var mergedSubmittedJob = configuration.GetSection(nameof(JobSettings)).Get<JobSettings>()
+                .CreateOrderCommandSubmittedJob;
+
+            configure
+                .AddJob<CreateOrderCommandSubmittedJob>(new JobKey(mergedSubmittedJob.JobName))
+                .AddTrigger(
+                    trigger => trigger
+                        .ForJob(mergedSubmittedJob.JobName)
+                        .WithCronSchedule(mergedSubmittedJob.CronExpression)
+                        .WithIdentity(mergedSubmittedJob.TriggerName, mergedSubmittedJob.TriggerGroup));
+
+            configure.UseMicrosoftDependencyInjectionJobFactory();
+        });
+
+        services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
     }
 
     private static void AddMediatRConfiguration(this IServiceCollection services)

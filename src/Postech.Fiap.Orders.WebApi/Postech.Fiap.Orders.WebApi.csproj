@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>0ee97123-5715-4baf-a6ba-32c8f479fdc2</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Storage.Queues" Version="12.21.0"/>
         <PackageReference Include="Carter" Version="9.0.0"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0"/>
         <PackageReference Include="MediatR" Version="12.4.1"/>
@@ -25,6 +27,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="MongoDB.Driver" Version="3.1.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
         <PackageReference Include="Quartz.AspNetCore" Version="3.13.1"/>
 
@@ -47,7 +50,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Features\Orders\Consumers\"/>
         <Folder Include="Features\Products\"/>
     </ItemGroup>
 
