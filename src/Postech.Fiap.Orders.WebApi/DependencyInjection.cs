@@ -15,6 +15,7 @@ using Postech.Fiap.Orders.WebApi.Features.Orders.Repositories;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Services;
 using Postech.Fiap.Orders.WebApi.Persistence;
 using Quartz;
+using Quartz.AspNetCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
@@ -58,6 +59,28 @@ public static class DependencyInjection
         services.AddSingleton<CreateOrderCommandSubmittedQueueClient>();
 
         services.AddQuartzConfiguration(configuration);
+        services.AddJobs();
+
+        return services;
+    }
+
+    private static IServiceCollection AddJobs(this IServiceCollection services)
+    {
+        services.AddQuartz(q =>
+        {
+            var orderJobKey = new JobKey("OrderCleanupJob");
+            q.AddJob<OrderCleanupJob>(opts => opts.WithIdentity(orderJobKey));
+            q.AddTrigger(opts => opts
+                .ForJob(orderJobKey)
+                .WithIdentity("OrderCleanupJob-trigger")
+                .WithSimpleSchedule(x => x
+                    .WithIntervalInMinutes(5)
+                    .RepeatForever())
+                .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
+            );
+        });
+
+        services.AddQuartzServer(options => { options.WaitForJobsToComplete = true; });
 
         return services;
     }
