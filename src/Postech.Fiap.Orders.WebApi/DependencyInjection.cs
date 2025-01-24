@@ -74,7 +74,7 @@ public static class DependencyInjection
                 .ForJob(orderJobKey)
                 .WithIdentity("OrderCleanupJob-trigger")
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInMinutes(60)
+                    .WithIntervalInMinutes(30)
                     .RepeatForever())
                 .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
             );
