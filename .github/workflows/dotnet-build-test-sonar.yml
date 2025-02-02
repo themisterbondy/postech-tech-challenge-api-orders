@@ -8,6 +8,20 @@ on:
 permissions:
   contents: read
 
+env:
+
+  # Configurações do Projeto
+  SOLUTION_FILE: 'Postech.Fiap.Orders.sln'
+  TEST_PROJECT: 'test/Postech.Fiap.Orders.WepApi.UnitTests'
+  SONAR_PROJECT_KEY: 'themisterbondy_postech-tech-challenge-api-orders'
+
+  # Configurações do SonarCloud
+  DOTNET_VERSION: '9.0.x'
+  SONAR_ORG: 'themisterbondy'
+  SONAR_HOST_URL: 'https://sonarcloud.io'
+  COVERAGE_FILE: 'coverage.xml'
+
+
 jobs:
   build-and-test:
     name: Build, Test & SonarCloud Analysis
@@ -19,10 +33,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔧 Instalar .NET 9
+      - name: 🔧 Instalar .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: 📥 Instalar SonarScanner e dotnet-coverage
         run: |
@@ -33,24 +47,24 @@ jobs:
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: 🚀 Restaurar dependências
-        run: dotnet restore Postech.Fiap.Orders.sln
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
 
       - name: 🔨 Compilar solução
-        run: dotnet build Postech.Fiap.Orders.sln --configuration Release --no-restore
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-      - name: 🧪 Rodar testes e coletar cobertura com dotnet-coverage
+      - name: 🧪 Rodar testes e coletar cobertura
         run: |
           dotnet sonarscanner begin \
-            /k:"themisterbondy_postech-tech-challenge-api-orders" \
-            /o:"themisterbondy" \
-            /d:sonar.host.url="https://sonarcloud.io" \
+            /k:"${{ env.SONAR_PROJECT_KEY }}" \
+            /o:"${{ env.SONAR_ORG }}" \
+            /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+            /d:sonar.cs.vscoveragexml.reportsPaths="${{ env.COVERAGE_FILE }}"
 
-          dotnet build Postech.Fiap.Orders.sln --configuration Release --no-restore
+          dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-          dotnet-coverage collect "dotnet test test/Postech.Fiap.Orders.WepApi.UnitTests --configuration Release" \
-            -f xml -o "coverage.xml"
+          dotnet-coverage collect "dotnet test ${{ env.TEST_PROJECT }} --configuration Release" \
+            -f xml -o "${{ env.COVERAGE_FILE }}"
 
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
@@ -60,9 +74,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=themisterbondy
-            -Dsonar.projectKey=themisterbondy_postech-tech-challenge-api-orders
-            -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml  # <- Correto para .NET
+            -Dsonar.organization=${{ env.SONAR_ORG }}
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+            -Dsonar.cs.vscoveragexml.reportsPaths=${{ env.COVERAGE_FILE }}
             -Dsonar.sources=src/
             -Dsonar.tests=test/
             -Dsonar.test.exclusions="test/**"
