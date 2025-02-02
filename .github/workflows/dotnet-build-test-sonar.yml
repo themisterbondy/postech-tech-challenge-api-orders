@@ -62,8 +62,8 @@ jobs:
           args: >
             -Dsonar.organization=themisterbondy
             -Dsonar.projectKey=themisterbondy_postech-tech-challenge-api-orders
-            -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.sources=lib/
+            -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml  # <- Correto para .NET
+            -Dsonar.sources=src/
             -Dsonar.tests=test/
-            -Dsonar.test.exclusions=test/**
+            -Dsonar.test.exclusions="test/**"
             -Dsonar.verbose=true
