@@ -41,7 +41,7 @@ jobs:
       - name: 🧪 Rodar testes e coletar cobertura com dotnet-coverage
         run: |
           dotnet sonarscanner begin \
-            /k:"themisterbondy_postech-fiap-orders" \
+            /k:"themisterbondy_postech-tech-challenge-api-orders" \
             /o:"themisterbondy" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
