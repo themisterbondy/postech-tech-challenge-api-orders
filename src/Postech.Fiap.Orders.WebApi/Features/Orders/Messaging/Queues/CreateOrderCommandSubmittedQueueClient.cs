@@ -4,7 +4,9 @@ using Postech.Fiap.Orders.WebApi.Common.ResultPattern;
 
 namespace Postech.Fiap.Orders.WebApi.Features.Orders.Messaging.Queues;
 
+[ExcludeFromCodeCoverage]
 public class CreateOrderCommandSubmittedQueueClient(IQueue queue, IOptions<AzureQueueSettings> azureQueueSettings)
+    : ICreateOrderCommandSubmittedQueueClient
 {
     private readonly AzureQueueSettings settings = azureQueueSettings.Value;
     private string QueueName => settings.CreateOrderCommand;

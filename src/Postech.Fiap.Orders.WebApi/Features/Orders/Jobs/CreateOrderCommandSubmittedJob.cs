@@ -7,7 +7,7 @@ using Quartz;
 namespace Postech.Fiap.Orders.WebApi.Features.Orders.Jobs;
 
 public class CreateOrderCommandSubmittedJob(
-    CreateOrderCommandSubmittedQueueClient queueClient,
+    ICreateOrderCommandSubmittedQueueClient queueClient,
     ISender sender,
     IConfiguration configuration,
     ILogger<CreateOrderCommandSubmittedJob> logger)
