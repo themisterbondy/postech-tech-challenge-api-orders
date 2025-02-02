@@ -54,8 +54,10 @@ jobs:
 
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-#        quality-gate:
       - name: 🚦 Verificar qualidade do código no SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectKey: "themisterbondy_postech-fiap-orders"
+          organization: "themisterbondy"                  
