@@ -24,10 +24,12 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: 📥 Instalar SonarScanner
-        run: dotnet tool install --global dotnet-sonarscanner
+      - name: 📥 Instalar SonarScanner e dotnet-coverage
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global dotnet-coverage
 
-      - name: 🔧 Configurar PATH para SonarScanner
+      - name: 🔧 Configurar PATH para Ferramentas Globais
         run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: 🚀 Restaurar dependências
@@ -36,35 +38,18 @@ jobs:
       - name: 🔨 Compilar solução
         run: dotnet build Postech.Fiap.Orders.sln --configuration Release --no-restore
 
-      - name: 🧪 Rodar testes com cobertura
-        run: |
-          dotnet test test/Postech.Fiap.Orders.WepApi.UnitTests \
-            --configuration Release \
-            --no-restore \
-            --logger trx \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults
-
-      - name: 📊 Converter cobertura para formato SonarCloud
-        run: |
-          dotnet tool install --global dotnet-reportgenerator-globaltool
-          reportgenerator \
-            -reports:TestResults/*/coverage.cobertura.xml \
-            -targetdir:TestResults/CoverageReport \
-            -reporttypes:Cobertura
-
-      - name: 📡 Rodar SonarCloud Scanner
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: 🧪 Rodar testes e coletar cobertura com dotnet-coverage
         run: |
           dotnet sonarscanner begin \
-            /k:"themisterbondy_postech-tech-challenge-api-orders" \
+            /k:"themisterbondy_postech-fiap-orders" \
             /o:"themisterbondy" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.coverageReportPaths="TestResults/CoverageReport/Cobertura.xml" \
-            /d:sonar.branch.name="${{ github.ref_name }}"  # <--- Adiciona a branch automaticamente
-          
+            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+
           dotnet build Postech.Fiap.Orders.sln --configuration Release --no-restore
-          
+
+          dotnet-coverage collect "dotnet test test/Postech.Fiap.Orders.WepApi.UnitTests --configuration Release" \
+            -f xml -o "coverage.xml"
+
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
