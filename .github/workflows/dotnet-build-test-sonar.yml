@@ -62,8 +62,9 @@ jobs:
             /o:"themisterbondy" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.coverageReportPaths="TestResults/CoverageReport/Cobertura.xml"
-
+            /d:sonar.coverageReportPaths="TestResults/CoverageReport/Cobertura.xml" \
+            /d:sonar.branch.name="${{ github.ref_name }}"  # <--- Adiciona a branch automaticamente
+          
           dotnet build Postech.Fiap.Orders.sln --configuration Release --no-restore
-
+          
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
