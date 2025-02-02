@@ -58,11 +58,12 @@ jobs:
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        args: >
-          -Dsonar.organization=themisterbondy
-          -Dsonar.projectKey=themisterbondy_postech-tech-challenge-api-orders
-          -Dsonar.python.coverage.reportPaths=coverage.xml
-          -Dsonar.sources=lib/
-          -Dsonar.tests=tests/
-          -Dsonar.test.exclusions=tests/**
-          -Dsonar.verbose=true
+        with:
+          args: >
+            -Dsonar.organization=themisterbondy
+            -Dsonar.projectKey=themisterbondy_postech-tech-challenge-api-orders
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=lib/
+            -Dsonar.tests=tests/
+            -Dsonar.test.exclusions=tests/**
+            -Dsonar.verbose=true
