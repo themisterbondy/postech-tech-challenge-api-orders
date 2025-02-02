@@ -10,6 +10,7 @@ using Postech.Fiap.Orders.WebApi.Persistence;
 
 namespace Postech.Fiap.Orders.WebApi.Persistence.Migrations
 {
+    [ExcludeFromCodeCoverage]
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
