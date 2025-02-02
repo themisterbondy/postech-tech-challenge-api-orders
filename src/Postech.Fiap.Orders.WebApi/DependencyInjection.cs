@@ -6,13 +6,13 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Postech.Fiap.CartsPayments.WebApi.Infrastructure.Queue;
 using Postech.Fiap.Orders.WebApi.Common.Behavior;
 using Postech.Fiap.Orders.WebApi.Common.Messaging;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Jobs;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Messaging.Queues;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Repositories;
 using Postech.Fiap.Orders.WebApi.Features.Orders.Services;
+using Postech.Fiap.Orders.WebApi.Infrastructure.Queue;
 using Postech.Fiap.Orders.WebApi.Persistence;
 using Quartz;
 using Quartz.AspNetCore;
@@ -56,7 +56,7 @@ public static class DependencyInjection
         services.AddScoped(cfg => cfg.GetService<IOptions<AzureQueueSettings>>().Value);
         services.AddSingleton(x => new QueueServiceClient(storageConnectionString));
         services.AddSingleton<IQueue, AzureQueueService>();
-        services.AddSingleton<CreateOrderCommandSubmittedQueueClient>();
+        services.AddSingleton<ICreateOrderCommandSubmittedQueueClient, CreateOrderCommandSubmittedQueueClient>();
 
         services.AddQuartzConfiguration(configuration);
         services.AddJobs();

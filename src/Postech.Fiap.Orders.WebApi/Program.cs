@@ -20,8 +20,6 @@ app.UseMiddleware<RequestContextLoggingMiddleware>();
 app.MapCarter();
 app.Run();
 
-namespace Postech.Fiap.Orders.WebApi
-{
-    [ExcludeFromCodeCoverage]
-    public partial class Program;
-}
+
+[ExcludeFromCodeCoverage]
+public partial class Program;
