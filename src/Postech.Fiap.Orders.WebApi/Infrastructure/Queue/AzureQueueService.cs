@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Postech.Fiap.Orders.WebApi.Common.Messaging;
 using Postech.Fiap.Orders.WebApi.Common.ResultPattern;
 
-namespace Postech.Fiap.CartsPayments.WebApi.Infrastructure.Queue;
+namespace Postech.Fiap.Orders.WebApi.Infrastructure.Queue;
 
 [ExcludeFromCodeCoverage]
 public class AzureQueueService(QueueServiceClient queueServiceClient) : IQueue
