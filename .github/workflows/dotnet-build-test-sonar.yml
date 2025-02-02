@@ -12,7 +12,7 @@ env:
 
   # Configurações do Projeto
   SOLUTION_FILE: 'Postech.Fiap.Orders.sln'
-  TEST_PROJECT: 'test/Postech.Fiap.Orders.WepApi.UnitTests'
+  TEST_PROJECT: 'test/Postech.Fiap.Orders.WebApi.UnitTests'
   SONAR_PROJECT_KEY: 'themisterbondy_postech-tech-challenge-api-orders'
 
   # Configurações do SonarCloud
