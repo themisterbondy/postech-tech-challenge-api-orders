@@ -6,6 +6,7 @@ using Quartz;
 
 namespace Postech.Fiap.Orders.WebApi.Features.Orders.Jobs;
 
+[ExcludeFromCodeCoverage]
 public class CreateOrderCommandSubmittedJob(
     ICreateOrderCommandSubmittedQueueClient queueClient,
     ISender sender,
