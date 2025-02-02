@@ -3,8 +3,7 @@ name: CI - Build, Test, SonarCloud
 on:
   push:
     branches:
-      - '**'
-
+      '**'
 
 permissions:
   contents: read
@@ -24,6 +23,12 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
+
+      - name: 📥 Instalar SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: 🔧 Configurar PATH para SonarScanner
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
       - name: 🚀 Restaurar dependências
         run: dotnet restore Postech.Fiap.Orders.sln
@@ -53,7 +58,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet sonarscanner begin \
-            /k:"seu-org_postech-fiap-orders" \
+            /k:"themisterbondy_postech-fiap-orders" \
             /o:"themisterbondy" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
