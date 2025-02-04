@@ -2,7 +2,7 @@
 
 ## Descrição
 
-O MyFood-Orders é um microserviço de controle de orders desenvolvido utilizando ASP.NET Core Minimal API com uma arquitetura Clean Architecture. Ele permite que os clientes montem combos personalizados e acompanhem o status de seus pedidos. O sistema também oferece funcionalidades administrativas para gerenciar produtos, categorias e campanhas promocionais.
+O MyFood-Orders é um microserviço de controle de pedidos desenvolvido utilizando ASP.NET Core Minimal API com uma arquitetura Clean Architecture. Ele permite que os clientes montem combos personalizados e acompanhem o status de seus pedidos. O sistema também oferece funcionalidades administrativas para gerenciar produtos, categorias e campanhas promocionais.
 
 ## Sobre o Projeto
 
