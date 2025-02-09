@@ -55,35 +55,47 @@ jobs:
       - name: 🔨 Compilar solução
         run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-      - name: 🧪 Rodar testes com cobertura e análise SonarCloud
+      - name: 🧪 Rodar testes e coletar cobertura
         run: |
-          # Instala o Coverlet Collector no projeto de testes
-          dotnet add ${{ env.TEST_PROJECT }} package coverlet.collector
-          
-          # Inicia a análise do SonarCloud
           dotnet sonarscanner begin \
             /k:"${{ env.SONAR_PROJECT_KEY }}" \
             /o:"${{ env.SONAR_ORG }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" \
-            /d:sonar.analysis.cache.enabled=false \
-            /d:sonar.scanner.scanAll=false
-          
-          # Build do projeto
-          dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore --no-incremental
-          
-          # Execução dos testes com coleta de cobertura no formato Cobertura
-          dotnet test ${{ env.TEST_PROJECT }} \
-            --configuration Release \
-            --no-restore \
-            --collect:"XPlat Code Coverage"
-          
-          # Finaliza a análise do SonarCloud
+            /d:sonar.cs.vscoveragexml.reportsPaths="${{ env.COVERAGE_FILE }}"
+
+          dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
+
+          dotnet-coverage collect "dotnet test ${{ env.TEST_PROJECT }} --configuration Release" \
+            -f xml -o "${{ env.COVERAGE_FILE }}"
+
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
+      - name: 🚦 Verificar qualidade do código no SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=${{ env.SONAR_ORG }}
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+            -Dsonar.cs.vscoveragexml.reportsPaths=${{ env.COVERAGE_FILE }}
+            -Dsonar.sources=src/
+            -Dsonar.tests=test/
+            -Dsonar.test.exclusions="test/**"
+            -Dsonar.verbose=true
+
+      - name: 🔍 Verificar se o arquivo de análise existe
+        id: check_report
+        run: |
+          if [ -f ".sonarqube/out/.sonar/report-task.txt" ]; then
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+
       - name: 🚦 Verificar Quality Gate no SonarCloud
-        id: sonarqube-quality-gate-check
+        if: env.exists == 'true'
         uses: sonarsource/sonarqube-quality-gate-action@master
         with:
           pollingTimeoutSec: 600
