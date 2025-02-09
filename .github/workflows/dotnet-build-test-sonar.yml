@@ -3,7 +3,8 @@ name: CI - Build, Test, SonarCloud
 on:
   push:
     branches:
-      '**'
+      - 'feature/**'
+      - 'develop'
 
 permissions:
   contents: read
@@ -20,6 +21,7 @@ env:
   SONAR_ORG: 'themisterbondy'
   SONAR_HOST_URL: 'https://sonarcloud.io'
   COVERAGE_FILE: 'coverage.xml'
+
 
 
 jobs:
@@ -52,7 +54,7 @@ jobs:
       - name: 🔨 Compilar solução
         run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-      - name: 🧪 Rodar testes e coletar cobertura
+      - name: 🧪 Rodar testes com cobertura e análise SonarCloud
         run: |
           dotnet sonarscanner begin \
             /k:"${{ env.SONAR_PROJECT_KEY }}" \
@@ -63,21 +65,17 @@ jobs:
 
           dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
-          dotnet-coverage collect "dotnet test ${{ env.TEST_PROJECT }} --configuration Release" \
+          dotnet-coverage collect "dotnet test ${{ env.TEST_PROJECT }} --configuration Release --no-restore" \
             -f xml -o "${{ env.COVERAGE_FILE }}"
 
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: 🚦 Verificar qualidade do código no SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
+      - name: 🚦 Verificar Quality Gate no SonarCloud
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          pollingTimeoutSec: 600
+          scanMetadataReportFile: .sonarqube/out/.sonar/report-task.txt  # ✅ Caminho corrigido
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=${{ env.SONAR_ORG }}
-            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-            -Dsonar.cs.vscoveragexml.reportsPaths=${{ env.COVERAGE_FILE }}
-            -Dsonar.sources=src/
-            -Dsonar.tests=test/
-            -Dsonar.test.exclusions="test/**"
-            -Dsonar.verbose=true
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
