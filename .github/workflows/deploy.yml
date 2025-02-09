@@ -66,18 +66,29 @@ jobs:
 
       - name: 🧪 Rodar testes com cobertura e análise SonarCloud
         run: |
+          # Instala o Coverlet Collector no projeto de testes
+          dotnet add ${{ env.TEST_PROJECT }} package coverlet.collector
+          
+          # Inicia a análise do SonarCloud
           dotnet sonarscanner begin \
             /k:"${{ env.SONAR_PROJECT_KEY }}" \
             /o:"${{ env.SONAR_ORG }}" \
             /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" \
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.vscoveragexml.reportsPaths="${{ env.COVERAGE_FILE }}"
-
-          dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
-
-          dotnet-coverage collect "dotnet test ${{ env.TEST_PROJECT }} --configuration Release --no-restore" \
-            -f xml -o "${{ env.COVERAGE_FILE }}"
-
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml" \
+            /d:sonar.analysis.cache.enabled=false \
+            /d:sonar.scanner.scanAll=false
+          
+          # Build do projeto
+          dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore --no-incremental
+          
+          # Execução dos testes com coleta de cobertura no formato Cobertura
+          dotnet test ${{ env.TEST_PROJECT }} \
+            --configuration Release \
+            --no-restore \
+            --collect:"XPlat Code Coverage"
+          
+          # Finaliza a análise do SonarCloud
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: 🚦 Verificar Quality Gate no SonarCloud
