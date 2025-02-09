@@ -15,7 +15,7 @@ permissions:
 env:
   # Configurações do Projeto
   SOLUTION_FILE: 'Postech.Fiap.Orders.sln'
-  TEST_PROJECT: 'test/Postech.Fiap.Orders.WebApi.UnitTest'
+  TEST_PROJECT: 'test/Postech.Fiap.Orders.WebApi.UnitTests'
   DOCKERFILE_PATH: 'src/Postech.Fiap.Orders.WebApi/Dockerfile'
   DOCKER_IMAGE_NAME: 'myfood-orders-webapi'
   COVERAGE_FILE: 'coverage.xml'
