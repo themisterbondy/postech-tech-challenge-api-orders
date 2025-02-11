@@ -1,23 +1,22 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E9CDBC74-CE4A-41EE-AE18-C2E53257BD8F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7E7035D1-A52A-4A00-B3E0-B969E8060686}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WebApi", "src\Postech.Fiap.Orders.WebApi\Postech.Fiap.Orders.WebApi.csproj", "{44EB9017-D871-44CF-8A86-04A80E200AA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WebApi", "src/Postech.Fiap.Orders.WebApi/Postech.Fiap.Orders.WebApi.csproj", "{44EB9017-D871-44CF-8A86-04A80E200AA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C820DFC-4A29-4255-A6D1-5EC1586D15D1}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WebApi.UnitTests", "test\Postech.Fiap.Orders.WebApi.UnitTests\Postech.Fiap.Orders.WebApi.UnitTests.csproj", "{06764304-80BE-4641-80D5-9AA76BCFC2D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Postech.Fiap.Orders.WebApi.UnitTests", "test/Postech.Fiap.Orders.WebApi.UnitTests/Postech.Fiap.Orders.WebApi.UnitTests.csproj", "{06764304-80BE-4641-80D5-9AA76BCFC2D4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI/CD", "CI/CD", "{FBD2C357-44B6-4CFB-A991-5117B78529FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{81EFDEFE-DE19-4AFB-ACF7-1971FB83796A}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\dotnet-build-test-sonar.yml = .github\workflows\dotnet-build-test-sonar.yml
+		.github/workflows/dotnet-build-test-sonar.yml = .github/workflows/dotnet-build-test-sonar.yml
 	EndProjectSection
 EndProject
 Global
